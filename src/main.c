@@ -65,8 +65,7 @@ int next_hour() {
     //get current time
     gettimeofday(&tv_now, NULL);
     // Get current RTC time in ticks
-    SET_PERI_REG_MASK(RTC_CNTL_TIME_UPDATE_REG, RTC_CNTL_TIME_UPDATE);      // force an update first
-    rtcnow = ((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME0_REG))) | (((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME1_REG))) << 32);
+    rtcnow = rtc_cntl_ll_get_rtc_time();
     
     //convert to timeinfo
     now = tv_now.tv_sec;
@@ -108,8 +107,8 @@ int next_minute() {
     //get current time
     gettimeofday(&tv_now, NULL);
     // Get current RTC time in ticks
-    SET_PERI_REG_MASK(RTC_CNTL_TIME_UPDATE_REG, RTC_CNTL_TIME_UPDATE);      // force an update first
-    rtcnow = ((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME0_REG))) | (((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME1_REG))) << 32);
+    
+    rtcnow = rtc_cntl_ll_get_rtc_time();
     
     //convert to timeinfo
     now = tv_now.tv_sec;
@@ -152,8 +151,7 @@ RTC_IRAM_ATTR void set_deepsleep_timer(uint64_t duration_us)
     int64_t rtc_count_delta = (sleep_duration << RTC_CLK_CAL_FRACT) / period;
 
     // Get current RTC time
-    SET_PERI_REG_MASK(RTC_CNTL_TIME_UPDATE_REG, RTC_CNTL_TIME_UPDATE);      // force an update first
-    uint64_t now = ((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME0_REG))) | (((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME1_REG))) << 32);
+    uint64_t now = rtc_cntl_ll_get_rtc_time();
 
     // Set wakeup time
     uint64_t future = now + (uint64_t)rtc_count_delta;
@@ -173,8 +171,7 @@ static void RTC_IRAM_ATTR wake_stub()
     uint64_t current=0;
     
     // Get current RTC time
-    SET_PERI_REG_MASK(RTC_CNTL_TIME_UPDATE_REG, RTC_CNTL_TIME_UPDATE);      // force an update first
-    uint64_t start = ((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME0_REG))) | (((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME1_REG))) << 32);
+    uint64_t start = rtc_cntl_ll_get_rtc_time();
 
     // Get RTC calibration
     uint32_t period = REG_READ(RTC_SLOW_CLK_CAL_REG);
@@ -182,7 +179,7 @@ static void RTC_IRAM_ATTR wake_stub()
     int64_t rtc_count_delta = ( (uint64_t)GAZPAR_DEBOUNCE_MS * 1000L << RTC_CLK_CAL_FRACT) / period;
 
     esp_default_wake_deep_sleep();
-    int wake_reason = REG_GET_FIELD(RTC_CNTL_SLP_WAKEUP_CAUSE_REG, RTC_CNTL_WAKEUP_CAUSE);
+    int wake_reason = rtc_cntl_ll_get_wakeup_cause();
 
     // to boot, return here.
     // to deep sleep again, continue below
@@ -195,8 +192,7 @@ static void RTC_IRAM_ATTR wake_stub()
     do
     {
         // Get current RTC time
-        SET_PERI_REG_MASK(RTC_CNTL_TIME_UPDATE_REG, RTC_CNTL_TIME_UPDATE);      // force an update first
-        current = ((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME0_REG))) | (((uint64_t)(READ_PERI_REG(RTC_CNTL_TIME1_REG))) << 32);
+        current = rtc_cntl_ll_get_rtc_time();
 
         REG_WRITE(TIMG_WDTFEED_REG(0), 1); //feed Watchdog during debounce wait
     } while (current-start<rtc_count_delta);

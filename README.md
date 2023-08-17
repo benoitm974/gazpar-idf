@@ -39,7 +39,7 @@ Thanks to espressif github thread https://github.com/espressif/esp-idf/issues/82
  
  - enable Flash encryption for secrets protection
  - add test cases
- - the current stub code is verbose and use direct esp REGISTRY calls, since it compatible with espressif idf 5.0 in 5.1 macros and function were added to help with this in the hal/rtc_cntl_ll.h we'll need to update to this once platformio stable version for IDF will be 5.1
+ - DONE in current branch idf-5.1 : the current stub code is verbose and use direct esp REGISTRY calls, since it compatible with espressif idf 5.0 in 5.1 macros and function were added to help with this in the hal/rtc_cntl_ll.h we'll need to update to this once platformio stable version for IDF will be 5.1
 
 ## License
 

@@ -11,10 +11,10 @@ static void obtain_time(void)
     //assume wifi in ok and accessible skip DHCP SNTP (see idf example if inerested in DHCP SNTP)
     ESP_LOGI(TAG, "Initializing and starting SNTP");
     
-    sntp_setservername(0, CONFIG_SNTP_TIME_SERVER);
+    esp_sntp_setservername(0, CONFIG_SNTP_TIME_SERVER);
     sntp_set_sync_mode(SNTP_SYNC_MODE_IMMED);
-    sntp_setoperatingmode(SNTP_OPMODE_POLL);
-    sntp_init();
+    esp_sntp_setoperatingmode(SNTP_OPMODE_POLL);
+    esp_sntp_init();
 
     sntp_status = esp_sntp_get_sync_status();
     while( sntp_status != SNTP_SYNC_STATUS_COMPLETED && retry < CONFIG_SNTP_SYNC_WAIT_RETRY ) {
