@@ -32,6 +32,9 @@ project was developed using platformIO and espressif framework
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
+## credits
+Thanks to espressif github thread https://github.com/espressif/esp-idf/issues/8208 and @igrr for the stub code which is used here for GPIO/Timer wake stub from gthub: https://gist.github.com/igrr/54f7fbe0513ac14e1aea3fd7fbecfeab
+
 ## Todo
  
  - enable Flash encryption for secrets protection
