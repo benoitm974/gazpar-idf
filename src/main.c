@@ -236,8 +236,9 @@ static void RTC_IRAM_ATTR wake_stub()
 void app_main(void)
 {
     ++boot_count;
+    esp_sleep_wakeup_cause_t cause = esp_sleep_get_wakeup_cause();
     ESP_LOGI(TAG, "Boot count: %d", boot_count);
-    ESP_LOGI(TAG, "app_main start wake cause: %d", esp_sleep_get_wakeup_cause());
+    ESP_LOGI(TAG, "app_main start wake cause: %d", cause);
     ESP_LOGI(TAG, "cpu freq: %lu", ets_get_cpu_frequency());
     //vTaskDelay(2000 / portTICK_PERIOD_MS);
 
@@ -255,9 +256,11 @@ void app_main(void)
         //SNTP /TODO: check wifi ok, check if not ntp done yet etc...
         sntp_setup_init();
         
-        //send MQTT //TODO: test return value
-        if (mqtt_message(gazpar_ticks)> -1) //if message sent then nb_ticks reset.
-            gazpar_ticks = 0;
+        //send MQTT, only if TIMER wake-up
+        if (cause == ESP_SLEEP_WAKEUP_TIMER) {
+            if (mqtt_message(gazpar_ticks)> -1) //if message sent then nb_ticks reset.
+                gazpar_ticks = 0;
+        }
     }
 
     //stop wifi
