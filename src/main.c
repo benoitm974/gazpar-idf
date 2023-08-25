@@ -73,7 +73,7 @@ int next_hour() {
 
     // calculate seconds until next time
     int seconds_elapsed = timeinfo->tm_sec + timeinfo->tm_min * 60;
-    int seconds_until_next_hour = 60 - seconds_elapsed;
+    int seconds_until_next_hour = 3600 - seconds_elapsed;
 
     // Calculate sleep duration in microseconds
     int64_t sleep_duration = (int64_t)seconds_until_next_hour* S_TO_NS - (int64_t)DEEP_SLEEP_TIME_OVERHEAD_US;
