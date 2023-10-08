@@ -13,6 +13,7 @@ project was developed using platformIO and espressif framework
 - create a secrets.h file with WiFI credentials
 - check all the settings in settings.h (static vs DHCP, period of transmission etc ...)
 - build
+- there is an option in settings about disabling DHCP and setting static ip/dns/gw in order to reduce connection time and enhance battery lifetime too.
 
 ## secrets.h template
 ```
